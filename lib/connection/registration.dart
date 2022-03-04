@@ -123,7 +123,7 @@ class _RegistrationState extends State<Registration> {
         validator: (value) {
           if (confirmPasswordEditingController.text !=
               passwordEditingController.text) {
-            return "Les mots de passes ne correspondent pas";
+            return "Les mots de passe ne correspondent pas";
           }
           return null;
         },

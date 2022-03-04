@@ -88,6 +88,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
       await NotesDatabase.instance.delete(widget.noteId);
 
       Navigator.of(context).pop();
+
     },
   );
 }
