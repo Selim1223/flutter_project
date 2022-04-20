@@ -18,6 +18,7 @@ class _NavigationState extends State<Navigation> {
     Home(),
     firstPage(),
     secondPage(),
+    thirdPage(),
 
   ];
 
@@ -45,7 +46,11 @@ class _NavigationState extends State<Navigation> {
                 label: "liste de recettes",
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.receipt_long_rounded),
+                icon: Icon(Icons.av_timer_rounded),
+                label: "minuteurs",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.notes),
                 label: "notes",
               ),
             ]),

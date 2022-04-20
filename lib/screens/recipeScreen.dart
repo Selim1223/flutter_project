@@ -21,7 +21,7 @@ class RecipeScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Text(
-                      recipeModel.title,
+                      "Nouvelle recette !",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
@@ -63,7 +63,7 @@ class RecipeScreen extends StatelessWidget {
               // Here we take the value from the MyHomePage object that was created by
               // the App.build method, and use it to set our appbar title.
               title: Text(
-            "Recettes",
+            recipeModel.title,
             textAlign: TextAlign.center,
           )),
           body: ListView(

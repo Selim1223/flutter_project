@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/connection/registration.dart';
-import 'package:flutter_project/screens/home.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -186,13 +185,15 @@ class _LoginState extends State<Login> {
             errorMessage = "L'utilisateur avec cet email n'existe pas.";
             break;
           case "user-disabled":
-            errorMessage = "L'utilisateur avec cette adresse e-mail a été désactivé.";
+            errorMessage =
+                "L'utilisateur avec cette adresse e-mail a été désactivé.";
             break;
           case "too-many-requests":
             errorMessage = "Trop de requêtes";
             break;
           case "operation-not-allowed":
-            errorMessage = "La connexion avec e-mail et mot de passe n'est pas activée.";
+            errorMessage =
+                "La connexion avec e-mail et mot de passe n'est pas activée.";
             break;
           default:
             errorMessage = "Une erreur inconnue s'est produite.";

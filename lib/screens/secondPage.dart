@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_project/screens/notes_screen.dart';
+import 'package:flutter_project/screens/countdown_screen.dart';
+import 'package:flutter_project/screens/thirdPage.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,18 +15,16 @@ Future main() async {
 }
 
 class secondPage extends StatelessWidget {
-  static final String title = 'Notes SQLite';
 
   @override
   Widget build(BuildContext context) => MaterialApp(
     debugShowCheckedModeBanner: false,
-    title: title,
     theme: ThemeData(
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.green,
         elevation: 0,
       ),
     ),
-    home: NotesPage(),
+    home: CountdownPage(),
   );
 }

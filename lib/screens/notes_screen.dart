@@ -1,75 +1,96 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_project/database/notes_database.dart';
+import 'package:flutter_project/models/note_model.dart';
+import 'package:flutter_project/screens/edit_note_screen.dart';
+import 'package:flutter_project/screens/note_detail_screen.dart';
+import 'package:flutter_project/widgets/note_card_widget.dart';
 
-
-import 'note_entry_page.dart';
-import 'note_notifer.dart';
-
-class NotesApp extends StatelessWidget {
+class NotesPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    final noteNotifier = Provider.of<NoteNotifier>(context);
-    return Theme(
-      data: ThemeData(primarySwatch: Colors.green),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Notes App'),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(18.0),
-          child: Column(
-            children: [
-              for (var note in noteNotifier.currentNotes)
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: 18.0),
-                    padding: EdgeInsets.all(8),
-                    color: Colors.yellowAccent.shade400,
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(note.title),
-                            Text('❗️' * note.priority)
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(note.body),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(convertToDate(note.date)),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-            ],
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => NoteEntryPage(),
-              ),
-            );
-          },
-          child: Icon(Icons.edit_outlined),
-        ),
-      ),
-    );
-  }
+  _NotesPageState createState() => _NotesPageState();
 }
 
-final dateFormat = DateFormat().add_yMMMMd();
-String convertToDate(DateTime date) {
-  return dateFormat.format(date);
+class _NotesPageState extends State<NotesPage> {
+  late List<Note> notes;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    refreshNotes();
+  }
+
+  @override
+  void dispose() {
+    NotesDatabase.instance.close();
+
+    super.dispose();
+  }
+
+  Future refreshNotes() async {
+    setState(() => isLoading = true);
+
+    this.notes = await NotesDatabase.instance.readAllNotes();
+
+    setState(() => isLoading = false);
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        backgroundColor: Colors.black54,
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            'Notes',
+            style: TextStyle(fontSize: 22),
+          ),
+          actions: [Icon(Icons.search), SizedBox(width: 12)],
+        ),
+        body: Center(
+          child: isLoading
+              ? CircularProgressIndicator()
+              : notes.isEmpty
+                  ? Text(
+                      'pas de notes',
+                      style: TextStyle(color: Colors.white, fontSize: 24),
+                    )
+                  : buildNotes(),
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.green,
+          child: Icon(Icons.add),
+          onPressed: () async {
+            await Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => AddEditNotePage()),
+            );
+
+            refreshNotes();
+          },
+        ),
+      );
+
+  Widget buildNotes() => StaggeredGridView.countBuilder(
+        padding: EdgeInsets.all(8),
+        itemCount: notes.length,
+        staggeredTileBuilder: (index) => StaggeredTile.fit(2),
+        crossAxisCount: 4,
+        mainAxisSpacing: 4,
+        crossAxisSpacing: 4,
+        itemBuilder: (context, index) {
+          final note = notes[index];
+
+          return GestureDetector(
+            onTap: () async {
+              await Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => NoteDetailPage(noteId: note.id!),
+              ));
+
+              refreshNotes();
+            },
+            child: NoteCardWidget(note: note, index: index),
+          );
+        },
+      );
 }
